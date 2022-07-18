@@ -1,0 +1,39 @@
+{
+  "name": "vite-plugin-contentstack",
+  "version": "1.0.0",
+  "description": "Create a Contentstack custom field without the SDK.",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "test": "NODE_OPTIONS=--experimental-vm-modules jest --config=jest.config.js"
+  },
+  "keywords": [
+    "vite",
+    "vite-plugin",
+    "rollup-plugin",
+    "contentstack"
+  ],
+  "author": "Rodney Santos",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/preset-env": "7.18.6",
+    "@babel/preset-typescript": "7.18.6",
+    "@types/jest": "28.1.3",
+    "@types/stringify-object": "4.0.1",
+    "jest": "28.1.3",
+    "ts-jest": "28.0.7",
+    "typescript": "4.7.4"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rodneysantos/vite-plugin-contentstack.git"
+  },
+  "dependencies": {
+    "stringify-object": "4.0.1"
+  },
+  "bugs": {
+    "url": "https://github.com/rodneysantos/vite-plugin-contentstack/issues"
+  },
+  "homepage": "https://github.com/rodneysantos/vite-plugin-contentstack#readme"
+}
