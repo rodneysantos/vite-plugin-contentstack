@@ -1,42 +1,46 @@
 import stringify from 'stringify-object';
+import { Plugin } from 'vite';
+
+export interface SDK {
+  extension: any;
+}
 
 const stringifyOptions = { indent: '  ' };
 
 // we're creating a mock of Contentstack.
 // This will allow us to initialize the SDK
 // without requiring the actual SDK.
-function shim(config: any): string {
-  const cs = class ContentstackUIExtension {
+function shim(sdk: SDK): string {
+  const klass = class ContentstackUIExtension {
     static init() {
-      return Promise.resolve({ ...config.extension });
+      return Promise.resolve({ ...sdk.extension });
     }
   };
 
-  return stringify(cs, stringifyOptions);
+  return stringify(klass, stringifyOptions);
 }
 
-export default function contentstack(csConfig: any) {
-  // creating a string that will be evaluated later
-  const stringCSConfig = `const config = ${stringify(csConfig, stringifyOptions)}`;
-
+export default function contentstack(sdk: SDK): Plugin {
   return {
     name: 'contentstack',
     enforce: 'pre',
-    transform(src: string, id: string) {
+    transform(this, code, id) {
       const app = /\/app\.tsx/;
       const csImport = /import.*@contentstack.*;/;
 
-      if (app.test(id)) {
+      if (app.test(id) && csImport.test(code)) {
+        // creating a string that will be evaluated later
+        const stringCSConfig = `const sdk = ${stringify(sdk, stringifyOptions)}`;
         // we're replacing the import statement
         // with mock version of the SDK
-        const code = src.replace(csImport, shim(stringCSConfig));
+        const src = code.replace(csImport, shim(sdk));
 
         return {
-          code: [stringCSConfig, code].join('\n'),
+          code: [stringCSConfig, src].join('\n'),
         };
       }
 
-      return { code: src };
+      return { code };
     },
   };
 }
